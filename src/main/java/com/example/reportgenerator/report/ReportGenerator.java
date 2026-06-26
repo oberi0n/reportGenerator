@@ -17,7 +17,7 @@ public class ReportGenerator {
       Map<String,Object> p = new HashMap<>();
       p.put("report", report); p.put("patient", report.patient()); p.put("physician", report.physician()); p.put("resultsDataSource", new JRBeanCollectionDataSource(report.results()));
       p.put("imageDir", props.imageDir()); p.put("fontDir", props.fontDir());
-      JasperPrint print = JasperFillManager.fillReport(compiled, p, new JRBeanCollectionDataSource(List.of(report)));
+      JasperPrint print = JasperFillManager.fillReport(compiled, p, new JREmptyDataSource(1));
       return JasperExportManager.exportReportToPdf(print);
     } catch(Exception e){ throw new IllegalStateException("PDF generation failed", e); }
   }
