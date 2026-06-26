@@ -10,6 +10,17 @@ docker compose up --build
 
 Déposez un XML, par exemple `ExportMedLogin2605066005.xml`, dans `./data/incoming`. Après traitement, le XML est déplacé dans `./data/processed`. En cas d'erreur, il est déplacé dans `./data/error` avec un fichier `.log`.
 
+
+## Interface de recherche
+
+Une interface web très simple est exposée par l'application sur <http://localhost:8080>. Elle interroge les fichiers `metadata.json` archivés dans MinIO et permet de rechercher un rapport par nom/prénom patient, ID interne, matricule/SSN ou numéro de référence. Les résultats affichent les informations patient principales et un lien temporaire vers le PDF archivé.
+
+API équivalente :
+
+```bash
+curl "http://localhost:8080/api/reports/search?q=TESTER"
+```
+
 ## MinIO
 
 - API: <http://localhost:9000>
