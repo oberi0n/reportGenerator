@@ -1,0 +1,33 @@
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-12-18T13-15-44Z
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports: ["9000:9000", "9001:9001"]
+    volumes: ["minio-data:/data"]
+  app:
+    build: .
+    depends_on: [minio]
+    environment:
+      APP_INCOMING_DIR: /data/incoming
+      APP_PROCESSED_DIR: /data/processed
+      APP_ERROR_DIR: /data/error
+      APP_POLL_INTERVAL_SECONDS: 10
+      APP_TEMPLATE_DIR: /app/templates
+      APP_TEMPLATE_MAIN: analytic.jrxml
+      APP_IMAGE_DIR: /app/images
+      APP_FONT_DIR: /app/fonts
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+      MINIO_BUCKET: lab-results
+    volumes:
+      - ./data/incoming:/data/incoming
+      - ./data/processed:/data/processed
+      - ./data/error:/data/error
+      - ./templates:/app/templates
+      - ./images:/app/images
+      - ./fonts:/app/fonts
+volumes: { minio-data: {} }

@@ -1,0 +1,3 @@
+package com.example.reportgenerator.report;
+import com.example.reportgenerator.config.AppProperties;import com.example.reportgenerator.parser.LabReportXmlParser;import org.junit.jupiter.api.Test;import static org.assertj.core.api.Assertions.*;
+class ReportGeneratorTest { @Test void generatesReadablePdfBytes(){ var r=new LabReportXmlParser().parse(getClass().getResourceAsStream("/samples/ExportMedLogin2605066005.xml")); byte[] pdf=new ReportGenerator(new AppProperties("","","",10,"classpath:/templates","analytic.jrxml","classpath:/images","classpath:/fonts")).generatePdf(r); assertThat(new String(pdf,0,4)).isEqualTo("%PDF"); assertThat(pdf.length).isGreaterThan(1000); }}
