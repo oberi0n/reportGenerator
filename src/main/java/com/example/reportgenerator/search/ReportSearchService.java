@@ -27,11 +27,16 @@ public class ReportSearchService {
     private final MinioClient minioClient;
     private final MinioProperties minioProperties;
     private final ObjectMapper objectMapper;
+    private final MinioClient presignedUrlClient;
 
     public ReportSearchService(MinioClient minioClient, MinioProperties minioProperties, ObjectMapper objectMapper) {
         this.minioClient = minioClient;
         this.minioProperties = minioProperties;
         this.objectMapper = objectMapper;
+        this.presignedUrlClient = MinioClient.builder()
+                .endpoint(minioProperties.presignedEndpoint())
+                .credentials(minioProperties.accessKey(), minioProperties.secretKey())
+                .build();
     }
 
     public List<ReportSearchResult> search(String query) {
@@ -102,7 +107,7 @@ public class ReportSearchService {
     private ReportSearchResult toResult(ReportMetadata metadata, String metadataPath) throws Exception {
         String pdfUrl = metadata.objectPdfPath() == null || metadata.objectPdfPath().isBlank()
                 ? null
-                : minioClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+                : presignedUrlClient.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
                 .method(Method.GET)
                 .bucket(minioProperties.bucket())
                 .object(metadata.objectPdfPath())
