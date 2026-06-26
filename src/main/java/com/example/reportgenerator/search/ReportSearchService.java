@@ -35,6 +35,7 @@ public class ReportSearchService {
         this.objectMapper = objectMapper;
         this.presignedUrlClient = MinioClient.builder()
                 .endpoint(minioProperties.presignedEndpoint())
+                .region(minioProperties.effectiveRegion())
                 .credentials(minioProperties.accessKey(), minioProperties.secretKey())
                 .build();
     }

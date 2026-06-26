@@ -10,6 +10,7 @@ app:
 minio:
   endpoint: ${MINIO_ENDPOINT:http://minio:9000}
   public-endpoint: ${MINIO_PUBLIC_ENDPOINT:${MINIO_ENDPOINT:http://minio:9000}}
+  region: ${MINIO_REGION:us-east-1}
   access-key: ${MINIO_ACCESS_KEY:minioadmin}
   secret-key: ${MINIO_SECRET_KEY:minioadmin}
   bucket: ${MINIO_BUCKET:lab-results}

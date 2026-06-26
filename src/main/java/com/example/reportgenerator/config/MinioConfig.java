@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MinioConfig {
   @Bean MinioClient minioClient(MinioProperties p) {
-    return MinioClient.builder().endpoint(p.endpoint()).credentials(p.accessKey(), p.secretKey()).build();
+    return MinioClient.builder()
+            .endpoint(p.endpoint())
+            .region(p.effectiveRegion())
+            .credentials(p.accessKey(), p.secretKey())
+            .build();
   }
 }
