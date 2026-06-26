@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="labo-lu-report" printOrder="Horizontal" pageWidth="272" pageHeight="180" columnWidth="272" leftMargin="0"
+              rightMargin="0" topMargin="0" bottomMargin="0" isTitleNewPage="true" isFloatColumnFooter="true">
+	<property name="net.sf.jasperreports.default.font.size" value="8"/>
+  <import value="org.apache.commons.lang3.StringUtils"/>
+	<style name="default" isDefault="true" fontName="ReportSourceSans3"/>
+	<style name="header" mode="Transparent" forecolor="#1961AC" fontSize="12"/>
+	<style name="zebraSr" fontName="DejaVu Sans" fontSize="10">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{AntibioGroup_COUNT}.intValue() % 2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F4F5FB"/>
+		</conditionalStyle>
+	</style>
+	<style name="textItem" mode="Transparent" forecolor="#1961AC" fontSize="8"/>
+	<style name="columnHeader" mode="Transparent" forecolor="#FF0000" fontSize="9"/>
+	<style name="borderLine" forecolor="#1961AC"/>
+	<style name="groupHeader" forecolor="#FFFFFF" backcolor="#BABABA" isBold="true"/>
+	<scriptlet name="Util" class="lu.labo.Util"/>
+	<parameter name="binary_id" class="java.lang.String"/>
+	<parameter name="language" class="java.lang.String">
+		<defaultValueExpression><![CDATA["en"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="left" class="java.lang.Boolean"/>
+	<parameter name="abGroupCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[6]]></defaultValueExpression>
+	</parameter>
+	<parameter name="resultCount" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[7]]></defaultValueExpression>
+	</parameter>
+	<parameter name="subIdsArray" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+  <parameter name="antibioComment" class="java.lang.String">
+    <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+  </parameter>
+  <parameter name="showAntibioLegendCaption" class="java.lang.Boolean">
+    <defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+  </parameter>
+  <parameter name="antibioLegendNote" class="java.lang.String">
+    <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+  </parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="analyseName" class="java.lang.String"/>
+	<field name="resultValue" class="java.lang.String"/>
+	<field name="resultComments" class="java.lang.String"/>
+	<variable name="abResVal1" class="java.lang.String">
+		<variableExpression><![CDATA[$P{Util_SCRIPTLET}.getAntibioResult(1,$F{resultValue},$P{subIdsArray})]]></variableExpression>
+	</variable>
+	<variable name="abResVal2" class="java.lang.String">
+		<variableExpression><![CDATA[$P{Util_SCRIPTLET}.getAntibioResult(2,$F{resultValue},$P{subIdsArray})]]></variableExpression>
+	</variable>
+	<variable name="abResVal3" class="java.lang.String">
+		<variableExpression><![CDATA[$P{Util_SCRIPTLET}.getAntibioResult(3,$F{resultValue},$P{subIdsArray})]]></variableExpression>
+	</variable>
+	<variable name="abResVal4" class="java.lang.String">
+		<variableExpression><![CDATA[$P{Util_SCRIPTLET}.getAntibioResult(4,$F{resultValue},$P{subIdsArray})]]></variableExpression>
+	</variable>
+	<variable name="abResVal5" class="java.lang.String">
+		<variableExpression><![CDATA[$P{Util_SCRIPTLET}.getAntibioResult(5,$F{resultValue},$P{subIdsArray})]]></variableExpression>
+	</variable>
+	<variable name="groupCount" class="java.lang.Integer" incrementType="Group" incrementGroup="AntibioGroup">
+		<variableExpression><![CDATA[$V{AntibioGroup_COUNT} == 1 ? ($V{groupCount} + 1) : $V{groupCount}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="visible" class="java.lang.Boolean">
+    <variableExpression><![CDATA[($P{left} && (($V{REPORT_COUNT} + $V{groupCount} - $V{AntibioGroup_COUNT}.intValue()) <= (($P{resultCount} + $P{abGroupCount})/2))) || (!$P{left} && !(($V{REPORT_COUNT} + $V{groupCount} - $V{AntibioGroup_COUNT}.intValue()) <= (($P{resultCount} + $P{abGroupCount})/2)))]]></variableExpression>
+	</variable>
+	<group name="AntibioGroup" minHeightToStartNewPage="30">
+		<groupExpression><![CDATA[$F{resultComments}]]></groupExpression>
+		<groupHeader>
+			<band height="15" splitType="Stretch">
+				<printWhenExpression><![CDATA[($P{left} && (($V{REPORT_COUNT} + $V{groupCount} - $V{AntibioGroup_COUNT}.intValue() +1 ) <= (($P{resultCount} + $P{abGroupCount})/2))) || (!$P{left} && !(($V{REPORT_COUNT} + $V{groupCount} - $V{AntibioGroup_COUNT}.intValue() + 1) <= (($P{resultCount} + $P{abGroupCount})/2)))]]></printWhenExpression>
+				<rectangle>
+					<reportElement style="groupHeader" mode="Opaque" x="0" y="0" width="250" height="15" backcolor="#BABABA"/>
+					<graphicElement>
+						<pen lineWidth="0.0"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement style="groupHeader" x="7" y="0" width="230" height="15" forecolor="#FFFFFF" backcolor="#BABABA"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+          <textFieldExpression><![CDATA[$F{resultComments}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{visible}]]></printWhenExpression>
+			<rectangle>
+				<reportElement style="zebraSr" x="0" y="0" width="250" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement style="header" stretchType="RelativeToTallestObject" x="7" y="2" width="150" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{analyseName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="textItem" mode="Opaque" x="200" y="2" width="11" height="11">
+					<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{abResVal1}.equals("S")?"#97FF97":$V{abResVal1}.equals("R")?"#FFC1C1":$V{abResVal1}.equals("I")?"#FEDAA5":"#DDDFE8"]]></propertyExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{abResVal1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="textItem" mode="Opaque" x="212" y="2" width="11" height="11">
+					<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{abResVal2}.equals("S")?"#97FF97":$V{abResVal2}.equals("R")?"#FFC1C1":$V{abResVal2}.equals("I")?"#FEDAA5":"#DDDFE8"]]></propertyExpression>
+					<printWhenExpression><![CDATA[$V{abResVal2}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{abResVal2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="textItem" mode="Opaque" x="224" y="2" width="11" height="11">
+					<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{abResVal3}.equals("S")?"#97FF97":$V{abResVal3}.equals("R")?"#FFC1C1":$V{abResVal3}.equals("I")?"#FEDAA5":"#DDDFE8"]]></propertyExpression>
+					<printWhenExpression><![CDATA[$V{abResVal3}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{abResVal3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="textItem" mode="Opaque" x="236" y="2" width="11" height="11">
+					<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{abResVal4}.equals("S")?"#97FF97":$V{abResVal4}.equals("R")?"#FFC1C1":$V{abResVal4}.equals("I")?"#FEDAA5":"#DDDFE8"]]></propertyExpression>
+					<printWhenExpression><![CDATA[$V{abResVal4}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{abResVal4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="textItem" mode="Opaque" x="248" y="2" width="11" height="11">
+					<propertyExpression name="net.sf.jasperreports.style.backcolor"><![CDATA[$V{abResVal5}.equals("S")?"#97FF97":$V{abResVal5}.equals("R")?"#FFC1C1":$V{abResVal5}.equals("I")?"#FEDAA5":"#DDDFE8"]]></propertyExpression>
+					<printWhenExpression><![CDATA[$V{abResVal5}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{abResVal5}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+    <band height="50" splitType="Prevent">
+      <printWhenExpression><![CDATA[$P{left}]]></printWhenExpression>
+
+      <textField textAdjust="StretchHeight">
+        <reportElement style="textItem" positionType="Float" width="545" x="0" y="0" height="0"/>
+        <textElement><font size="4"/></textElement>
+        <textFieldExpression><![CDATA[" "]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight">
+        <reportElement style="textItem" positionType="Float" width="545" x="0" y="0" height="0" mode="Opaque" forecolor="#1961AC" backcolor="#E6E6E6">
+          <printWhenExpression><![CDATA[StringUtils.isNotEmpty($P{antibioComment})]]></printWhenExpression>
+        </reportElement>
+        <box leftPadding="7"/>
+        <textElement textAlignment="Left" verticalAlignment="Top">
+          <font size="10.5" isBold="true"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"Comment":($P{language}.toLowerCase().equals("de")?"Kommentar":"Commentaire")]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight">
+        <reportElement style="textItem" positionType="Float" width="545" x="0" y="0" height="0">
+          <printWhenExpression><![CDATA[StringUtils.isNotEmpty($P{antibioComment})]]></printWhenExpression>
+        </reportElement>
+        <box leftPadding="7" rightPadding="7" topPadding="2" bottomPadding="2" bottomBorder="1Point"/>
+        <textElement textAlignment="Left" verticalAlignment="Top">
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{antibioComment}]]></textFieldExpression>
+      </textField>
+
+      <frame>
+        <reportElement positionType="Float" x="0" y="0" width="545" height="50">
+          <printWhenExpression><![CDATA[$P{showAntibioLegendCaption}]]></printWhenExpression>
+        </reportElement>
+
+        <textField>
+          <reportElement style="textItem" x="7" y="4" width="150" height="15"/>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"Legend antibiogram":($P{language}.toLowerCase().equals("de")?"Legende Antibiogramm:":"Légende antibiogramme:")]]></textFieldExpression>
+        </textField>
+        <rectangle>
+          <reportElement x="7" y="18" width="60" height="12" backcolor="#97FF97"/>
+          <graphicElement>
+            <pen lineWidth="0.0"/>
+          </graphicElement>
+        </rectangle>
+        <textField>
+          <reportElement style="textItem" x="7" y="19" width="60" height="10"/>
+          <textElement textAlignment="Center" verticalAlignment="Middle">
+            <font size="7"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"sensitive":($P{language}.toLowerCase().equals("de")?"sensibel":"sensible")]]></textFieldExpression>
+        </textField>
+        <textField>
+          <reportElement style="textItem" x="70" y="18" width="380" height="20">
+            <printWhenExpression><![CDATA[$P{showAntibioLegendCaption}]]></printWhenExpression>
+          </reportElement>
+          <textElement textAlignment="Left" verticalAlignment="Top">
+            <font size="8"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"susceptible to the antibiotic at the standard dose":($P{language}.toLowerCase().equals("de")?"empfindlich gegenüber dem Antibiotikum in der Standarddosierung":"sensible à l’antibiotique à posologie standard")]]></textFieldExpression>
+        </textField>
+        <rectangle>
+          <reportElement x="7" y="33" width="60" height="12" backcolor="#FEDAA5"/>
+          <graphicElement>
+            <pen lineWidth="0.0"/>
+          </graphicElement>
+        </rectangle>
+        <textField>
+          <reportElement style="textItem" x="7" y="34" width="60" height="10"/>
+          <textElement textAlignment="Center" verticalAlignment="Middle">
+            <font size="7"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"intermediate":($P{language}.toLowerCase().equals("de")?"intermediär":"intermédiaire")]]></textFieldExpression>
+        </textField>
+        <textField>
+          <reportElement style="textItem" x="70" y="33" width="380" height="20">
+            <printWhenExpression><![CDATA[$P{showAntibioLegendCaption}]]></printWhenExpression>
+          </reportElement>
+          <textElement textAlignment="Left" verticalAlignment="Top">
+            <font size="8"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"susceptible to the antibiotic at higher dose":($P{language}.toLowerCase().equals("de")?"empfindlich gegenüber dem Antibiotikum in höherer Dosierung":"sensible à l’antibiotique à posologie plus élevée")]]></textFieldExpression>
+        </textField>
+        <rectangle>
+          <reportElement x="7" y="48" width="60" height="12" backcolor="#FFC1C1"/>
+          <graphicElement>
+            <pen lineWidth="0.0"/>
+          </graphicElement>
+        </rectangle>
+        <textField>
+          <reportElement style="textItem" x="7" y="49" width="60" height="10" backcolor="#FFC1C1"/>
+          <textElement textAlignment="Center" verticalAlignment="Middle">
+            <font size="7"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"resistant":($P{language}.toLowerCase().equals("de")?"resistent":"résistant")]]></textFieldExpression>
+        </textField>
+        <textField>
+          <reportElement style="textItem" x="70" y="48" width="380" height="20">
+            <printWhenExpression><![CDATA[$P{showAntibioLegendCaption}]]></printWhenExpression>
+          </reportElement>
+          <textElement textAlignment="Left" verticalAlignment="Top">
+            <font size="8"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{language}.toLowerCase().equals("en")?"resistant to the antibiotic at any dose":($P{language}.toLowerCase().equals("de")?"resistent gegen das Antibiotikum, unabhängig von der verwendeten Dosierung":"résistant à l’antibiotique quelle que soit la posologie utilisée")]]></textFieldExpression>
+        </textField>
+
+        <textField textAdjust="StretchHeight">
+          <reportElement style="textItem" positionType="Float" width="545" x="0" y="65" height="0">
+            <printWhenExpression><![CDATA[$P{showAntibioLegendCaption} && StringUtils.isNotEmpty($P{antibioLegendNote})]]></printWhenExpression>
+          </reportElement>
+          <box leftPadding="7" bottomPadding="10" />
+          <textElement textAlignment="Left" verticalAlignment="Top">
+            <font size="8"/>
+          </textElement>
+          <textFieldExpression><![CDATA[$P{antibioLegendNote}]]></textFieldExpression>
+        </textField>
+
+      </frame>
+
+    </band>
+	</summary>
+</jasperReport>

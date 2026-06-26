@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="197px" height="162px" viewBox="0 0 197 162" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>arrow-down</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="arrow-down" transform="translate(0.080000, 0.970000)" fill="#FF3300" fill-rule="nonzero">
+            <path d="M0,160.28 C65.43,160.12 130.86,160.47 196.29,160.1 C182.32,136.635 168.0675,113.3375 153.76875,90.0675 L137.675603,63.8929688 C128.737969,49.3498047 119.816875,34.796875 110.97,20.2 C110.271667,19.075 109.58,17.9458333 108.891296,16.8148148 L105.79963,11.720544 C103.391111,7.76076389 100.950833,3.82083333 98.32,0 C65.44,53.36 32.92,106.95 0,160.28 Z" id="Path"></path>
+        </g>
+    </g>
+</svg>

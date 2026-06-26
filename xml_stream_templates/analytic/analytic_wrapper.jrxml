@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="labo-lu-report" pageWidth="595" pageHeight="822" columnWidth="545" leftMargin="25" rightMargin="25" topMargin="15" bottomMargin="15" isFloatColumnFooter="true" uuid="a3fee6e7-1dec-4804-990e-575be3e06b39">
+	<property name="net.sf.jasperreports.default.font.size" value="8"/>
+	<property name="net.sf.jasperreports.export.pdfa.conformance" value="pdfa1a"/>
+	<property name="net.sf.jasperreports.export.pdfa.icc.profile.path" value="sRGB.icc"/>
+	<property name="net.sf.jasperreports.default.pdf.embedded" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tag.language" value="en-us"/>
+	<import value="org.apache.commons.lang3.StringUtils"/>
+	<style name="default" isDefault="true" fontName="ReportSourceSans3"/>
+	<style name="header" style="default" forecolor="#1961AC" fontName="ReportSourceSans3" fontSize="9">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{isSectionHeader}]]></conditionExpression>
+			<style fontSize="10" isBold="true"/>
+		</conditionalStyle>
+	</style>
+	<style name="zebra">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{isSectionHeader}]]></conditionExpression>
+			<style mode="Opaque" backcolor="#E6E6E6"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}.intValue() % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#F4F5FB"/>
+		</conditionalStyle>
+	</style>
+	<style name="layoutAnalyseIndent" style="header">
+		<conditionalStyle>
+			<conditionExpression><![CDATA["true".equals($F{layoutAnalyseIndent})]]></conditionExpression>
+			<style>
+				<box leftPadding="15"/>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="newSection" style="header">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{newSection}]]></conditionExpression>
+			<style>
+				<box topPadding="12"/>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="textItem" style="default" mode="Transparent" forecolor="#1961AC" fontSize="8"/>
+	<style name="pdfHeader" mode="Opaque" forecolor="#1961AC" pattern=""/>
+	<style name="columnHeader" mode="Transparent" forecolor="#FF0000" fontSize="8"/>
+	<style name="borderLine" forecolor="#1961AC"/>
+	<style name="groupHeader" forecolor="#FFFFFF" backcolor="#BABABA" isBold="true"/>
+	<style name="Table_TD">
+		<box leftPadding="0">
+			<pen lineWidth="0.0" lineColor="#FFFFFF"/>
+			<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
+			<leftPen lineWidth="0.5" lineColor="#FFFFFF"/>
+			<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
+			<rightPen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[!$F{background}]]></conditionExpression>
+			<style>
+				<box leftPadding="0">
+					<pen lineWidth="0.0" lineColor="#FFFFFF"/>
+					<topPen lineWidth="0.0" lineColor="#FFFFFF"/>
+					<leftPen lineWidth="0.0" lineColor="#FFFFFF"/>
+					<bottomPen lineWidth="0.0" lineColor="#FFFFFF"/>
+					<rightPen lineWidth="0.0" lineColor="#FFFFFF"/>
+				</box>
+			</style>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{background} && $V{REPORT_COUNT}.intValue() == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#B6BBD1"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{background} && $V{REPORT_COUNT}.intValue() % 2 == 1]]></conditionExpression>
+			<style mode="Opaque" backcolor="#E6E8EE"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{background} && $V{REPORT_COUNT}.intValue() % 2 == 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#D9DBE6"/>
+		</conditionalStyle>
+	</style>
+	<style name="resultComment" forecolor="#1961AC" fontName="ReportHackMono">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{background} && $V{REPORT_COUNT}.intValue() == 1]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+	</style>
+	<style name="bold" style="textItem" isBold="true"/>
+	<subDataset name="TableDataset" uuid="998ba41a-db15-454b-a081-bc8613899c31">
+		<field name="0" class="java.lang.String"/>
+		<field name="1" class="java.lang.String"/>
+		<field name="background" class="java.lang.Boolean"/>
+		<field name="header" class="java.lang.String"/>
+		<field name="footer" class="java.lang.String"/>
+	</subDataset>
+	<scriptlet name="Util" class="lu.labo.Util"/>
+	<scriptlet name="Scale" class="lu.labo.ImageController"/>
+	<parameter name="pdf" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="report_chart_url" class="java.lang.String" evaluationTime="Early">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="referenceNumber" class="java.lang.String"/>
+	<field name="patientFullName" class="java.lang.String"/>
+	<field name="patientInfo" class="java.lang.String"/>
+	<field name="physicianFullName" class="java.lang.String"/>
+	<field name="physicianInfo" class="java.lang.String"/>
+	<field name="examinationStatus" class="java.lang.String"/>
+	<field name="animalName" class="java.lang.String"/>
+	<field name="animalBirthdate" class="java.lang.String"/>
+	<field name="prescriptionDate" class="java.lang.String"/>
+	<field name="examinationDate" class="java.lang.String"/>
+	<field name="creationDate" class="java.lang.String"/>
+	<field name="completionDate" class="java.lang.String"/>
+	<field name="validationDate" class="java.lang.String"/>
+	<field name="specimenDate" class="java.lang.String"/>
+	<field name="prelevementDate" class="java.lang.String"/>
+	<field name="editDate" class="java.lang.String"/>
+	<field name="language" class="java.lang.String"/>
+	<field name="accreditation" class="java.lang.Boolean"/>
+	<field name="kopieempfaenger" class="java.lang.String"/>
+	<field name="andereGenetik" class="java.lang.String"/>
+	<field name="spouseLastname" class="java.lang.String"/>
+	<field name="validator" class="java.lang.String"/>
+	<field name="qr" class="java.lang.String"/>
+	<field name="qrValidTime" class="java.lang.String"/>
+	<field name="resultCount" class="java.lang.Integer"/>
+  <field name="isaComment" class="java.lang.String"/>
+  <field name="patrejectComment" class="java.lang.String"/>
+	<field name="naccChemie" class="java.lang.String"/>
+	<field name="results" class="java.util.List"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="224" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{pdf}]]></printWhenExpression>
+			<image>
+				<reportElement x="317" y="0" width="230" height="60" uuid="2541191b-7138-4d0b-b857-c79d7c17acac"/>
+				<imageExpression><![CDATA["/images/Logo_LR.svg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement style="pdfHeader" x="317" y="66" width="230" height="19" uuid="a360ae56-9cc3-478e-b23b-971f83f22916"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Prof. Dr. med. Bernard Weber • Dr. Stéphane Tholl"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pdfHeader" x="317" y="51" width="230" height="15" uuid="a360ae56-9cc3-478e-b23b-971f83f22916"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["A N A L Y S E S    M É D I C A L E S"]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="pdfHeader" isPrintRepeatedValues="false" x="2" y="140" width="277" height="25" uuid="0c8fe752-5bde-4b36-8d18-85695e21a5d8">
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{patientFullName})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="true"/>
+					<paragraph spacingAfter="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patientFullName}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
+				<reportElement style="pdfHeader" x="2" y="180" width="276" height="43" uuid="53d1ed97-40a7-49d8-a3d3-4035204b3724">
+					<property name="net.sf.jasperreports.style.box.bottomPadding" value="4"/>
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{patientInfo})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patientInfo}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="pdfHeader" isPrintRepeatedValues="false" x="290" y="140" width="254" height="30" uuid="2f42324e-f258-4ccc-8a60-a1f3e7087606">
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{physicianFullName})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{physicianFullName}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="pdfHeader" x="290" y="180" width="254" height="43" uuid="34942daf-02c3-4532-aeb9-e1126f4e6a37">
+					<property name="net.sf.jasperreports.style.box.bottomPadding" value="4"/>
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{physicianInfo})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{physicianInfo}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="90" width="220" height="41" forecolor="#1961AC" uuid="d0f747b3-96ae-4370-ae74-7fd7e61c0bff"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="12" y="94" width="39" height="20" forecolor="#1961AC" uuid="03df7d8c-759c-458c-9742-79a60ea5a6dd"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REF.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="51" y="94" width="169" height="18" forecolor="#1961AC" uuid="673aa9be-98b0-4ecd-89bc-74412f6c6b95"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{referenceNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="12" y="112" width="128" height="20" forecolor="#1961AC" uuid="d3076f45-ce76-4e01-890a-4e0df3dd983b"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{examinationStatus}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="pdfHeader" x="2" y="166" width="277" height="12" uuid="1fcbf072-61a6-4be8-8dc8-01049b8397c6">
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{spouseLastname})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{spouseLastname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<printWhenExpression><![CDATA[$V{PAGE_NUMBER} < 2]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="545" height="26" uuid="3582a5e4-e899-4a10-9545-9f8b7c57e20f"/>
+				<box>
+					<pen lineWidth="0.5" lineStyle="Solid" lineColor="#1961AC"/>
+				</box>
+				<textField>
+					<reportElement style="textItem" x="16" y="2" width="82" height="12" uuid="49d83d54-5d87-4b1e-afac-c5d66014dd97"/>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"Prescribed on:":($F{language}.equals("de")?"Verschrieben am:":"Prescrit le:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="16" y="14" width="82" height="12" uuid="ca568314-ecad-4fff-9ffb-932165f27c71"/>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"Withdrawal on:":($F{language}.equals("de")?"Entnahme am:":"Prélèvement du:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="207" y="2" width="82" height="12" uuid="9050debf-f247-4e5e-b387-869cebd4ea28"/>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"Validated on:":($F{language}.equals("de")?"Validiert am:":"Validé le:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="400" y="2" width="82" height="12" uuid="bac4987a-bc2c-409a-97e9-c0f2fe2d52d9"/>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"Edited on:":($F{language}.equals("de")?"Editiert am:":"Édité le:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="99" y="2" width="82" height="12" uuid="f58d2f16-5a95-47ec-a6a3-1951d904532f"/>
+					<textFieldExpression><![CDATA[$F{prescriptionDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="99" y="14" width="82" height="12" uuid="bca529c4-9014-4bf3-85a7-2c0a6573bd22"/>
+					<textFieldExpression><![CDATA[$F{prelevementDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="290" y="2" width="82" height="12" uuid="582853a3-b3ce-4735-98f4-26274744cf14"/>
+					<textFieldExpression><![CDATA[$F{validationDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement key="" style="textItem" x="453" y="2" width="82" height="12" uuid="fa6b38d1-93f0-496a-8e1e-66cf0138b075"/>
+					<textFieldExpression><![CDATA[$F{editDate}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="191" y="1" width="1" height="24" forecolor="#CCCCCC" uuid="c9265c63-eb10-4430-9615-574b5f817304">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="381" y="1" width="1" height="24" forecolor="#CCCCCC" uuid="0b7f5d71-2ef9-4706-b263-9af220e25b94">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+			</frame>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="545" height="15" backcolor="#FFEEEE" uuid="3582a5e4-e899-4a10-9545-9f8b7c57e20f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<pen lineColor="#1961AC"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid" lineColor="#1961AC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid" lineColor="#1961AC"/>
+				</box>
+				<textField>
+					<reportElement style="columnHeader" x="173" y="2" width="87" height="12" uuid="648d3ccc-97cc-43b4-ab3c-b8985412155c">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"| RESULTS":($F{language}.equals("de")?"| RESULTATE":"| RÉSULTATS")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="253" y="2" width="80" height="12" uuid="2aea48f9-eab2-459b-9f31-d98850cb4ad5">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"| UNITS":($F{language}.equals("de")?"| EINHEITEN":"| UNITÉS")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="438" y="2" width="100" height="12" uuid="6676bae8-f2e5-47c9-8811-011db5fd8dc0">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"| PREVIOUS RESULTS":($F{language}.equals("de")?"| VORHERIGE ERGEBNISSE":"| RÉSULTATS PRÉCÉDENTS")]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement style="borderLine" x="0" y="0" width="545" height="1" uuid="6f2343a8-8778-43ff-a481-8c29d70d7dab"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement style="columnHeader" x="311" y="2" width="119" height="12" uuid="292c2836-c22b-40fe-884f-1886ea005a60">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"| REFERENCE VALUES":($F{language}.equals("de")?"| REFERENZWERTE":"| VALEURS DE RÉFÉRENCE")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="10" y="2" width="150" height="12" uuid="deeaadc7-48a9-4e6a-84e0-b9e60be8197b">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equals("en")?"ANALYSIS":($F{language}.equals("de")?"ANALYSEN":"ANALYSES")]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15">
+			<subreport>
+				<reportElement x="0" y="0" width="545" height="15" uuid="51431443-d866-4564-a973-9273697633ab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="pdf">
+					<subreportParameterExpression><![CDATA[$P{pdf}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="specimenDate">
+					<subreportParameterExpression><![CDATA[$F{specimenDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="language">
+					<subreportParameterExpression><![CDATA[$F{language}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="report_chart_url">
+					<subreportParameterExpression><![CDATA[$P{report_chart_url}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanArrayDataSource($F{results}.toArray())]]></dataSourceExpression>
+				<subreportExpression><![CDATA["analytic_results.jrxml"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="2">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[!new Boolean(true).equals($P{REPORT_PARAMETERS_MAP}.get("LastPage"))]]></printWhenExpression>
+			<line>
+				<reportElement key="" style="borderLine" x="0" y="0" width="545" height="1" uuid="ef361de0-35c2-4cf3-9a25-5b66ecf35ca0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="43" splitType="Stretch">
+			<printWhenExpression><![CDATA[$P{pdf}]]></printWhenExpression>
+			<image>
+				<reportElement x="0" y="0" width="100" height="35" uuid="c414a295-ffe5-43f6-8c5c-869366cdf8a6">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{accreditation} != null && $F{accreditation}]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA["/images/iso15189.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="borderLine" x="100" y="0" width="444" height="40" backcolor="rgba(255, 255, 255, 0.0)" uuid="af50269d-d503-4c82-a666-ba9c07c15fc1">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" markup="styled">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Laboratoires Réunis Luxembourg S.A. · 38, rue Hiehl · Z.A.C. Laangwiss · L-6131 Junglinster · B.P. 11 · L-6101 Junglinster
+Tél. +352 780 290 1 · Fax +352 788 894
+TVA: LU28010825 · RCS Luxembourg: B 200637 · <style isBold='true'>contact@labo.lu</style> · <style isBold='true'>www.labo.lu</style>]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="294">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[new Boolean("dummyPrintWhen".equals($P{REPORT_PARAMETERS_MAP}.put("LastPage",true))) || true]]></printWhenExpression>
+			<line>
+				<reportElement key="" style="borderLine" x="0" y="0" width="545" height="1" uuid="ef361de0-35c2-4cf3-9a25-5b66ecf35ca0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField textAdjust="StretchHeight">
+				<reportElement style="textItem" x="0" y="3" width="580" height="15" isRemoveLineWhenBlank="true" uuid="6f693ef2-89a2-4bda-92c9-3a80bbd2cd75">
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{patrejectComment})]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{patrejectComment}]]></textFieldExpression>
+			</textField>
+      <textField textAdjust="StretchHeight">
+        <reportElement style="textItem" x="0" y="3" width="580" height="15" isRemoveLineWhenBlank="true" uuid="6f693ef2-89a2-4bda-92c9-3a80bbd2cd75">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{isaComment})]]></printWhenExpression>
+        </reportElement>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{isaComment}]]></textFieldExpression>
+      </textField>
+      <textField textAdjust="StretchHeight">
+        <reportElement style="textItem" x="0" y="3" width="580" height="15" isRemoveLineWhenBlank="true" uuid="6f693ef2-89a2-4bda-92c9-3a80bbd2cd75">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{naccChemie})]]></printWhenExpression>
+        </reportElement>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{naccChemie}]]></textFieldExpression>
+      </textField>
+			<textField textAdjust="StretchHeight" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement style="textItem" positionType="Float" x="0" y="18" width="560" height="15" isRemoveLineWhenBlank="true" uuid="6f693ef2-89a2-4bda-92c9-3a80bbd2cd75">
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{kopieempfaenger})]]></printWhenExpression>
+				</reportElement>
+				<box topPadding="5"/>
+				<textFieldExpression><![CDATA[$F{kopieempfaenger}.trim()]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement style="textItem" positionType="Float" x="0" y="33" width="560" height="15" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="6f693ef2-89a2-4bda-92c9-3a80bbd2cd75">
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{andereGenetik})]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{andereGenetik}.trim()]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" evaluationTime="Auto" isBlankWhenNull="true">
+				<reportElement style="textItem" positionType="Float" x="0" y="48" width="545" height="15" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="6f693ef2-89a2-4bda-92c9-3a80bbd2cd75">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{validator})]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{validator}.trim()]]></textFieldExpression>
+			</textField>
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="100" y="80" width="340" height="205" isRemoveLineWhenBlank="true" uuid="3582a5e4-e899-4a10-9545-9f8b7c57e20f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{pdf} && StringUtils.isNotBlank($F{qr})]]></printWhenExpression>
+				</reportElement>
+				<rectangle radius="15">
+					<reportElement x="0" y="0" width="340" height="205" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0E3F8E" uuid="ad378515-b324-4614-8324-6c8c171196f0">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+				</rectangle>
+				<image onErrorType="Blank">
+					<reportElement x="101" y="60" width="140" height="140" uuid="79899a92-39c9-41bb-9d6e-bcf6a2702eed">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{qr}.getBytes()))]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="5" y="10" width="335" height="27" forecolor="#FFFFFF" uuid="78ef12e5-989b-4da2-bfbc-5a42a164ddec">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[EU DIGITAL COVID CERTIFICATE]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="5" y="37" width="335" height="15" forecolor="#FFFFFF" uuid="d47a1992-f97c-4b90-b336-3f8cd6c0ed25">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{qrValidTime})]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Valid: " + $F{qrValidTime}]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="260" y="90" width="60" height="60" uuid="c47420c0-487c-4dbf-a385-8a064a8af857">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<imageExpression><![CDATA["/images/eu_lu.png"]]></imageExpression>
+				</image>
+			</frame>
+		</band>
+	</summary>
+</jasperReport>

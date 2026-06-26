@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="labo-lu-report" columnWidth="545" leftMargin="25" rightMargin="25" topMargin="15" bottomMargin="15"
+              isFloatColumnFooter="true" whenResourceMissingType="Empty" isIgnorePagination="true">
+	<property name="net.sf.jasperreports.export.pdfa.conformance" value="pdfa1a"/>
+	<property name="net.sf.jasperreports.export.pdfa.icc.profile.path" value="sRGB.icc"/>
+	<property name="net.sf.jasperreports.default.pdf.embedded" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tagged" value="true"/>
+	<property name="net.sf.jasperreports.export.pdf.tag.language" value="en-us"/>
+	<import value="org.apache.commons.lang3.StringUtils"/>
+  <style name="default" isDefault="true" fontName="ReportSourceSans3"/>
+  <style name="borderLine" forecolor="#1961AC"/>
+  <style name="pdfHeader" style="default" mode="Opaque" forecolor="#1961AC" pattern=""/>
+  <style name="columnHeader" style="default" mode="Transparent" forecolor="#FF0000" fontSize="8.5"/>
+  <style name="textItem" style="default" mode="Transparent" forecolor="#1961AC" fontName="ReportSourceSans3" fontSize="8.5"/>
+  <style name="nacFooter" style="textItem" fontSize="7">
+    <box padding="0" bottomPadding="5"/>
+    <paragraph lineSpacing="Double"/>
+  </style>
+	<subDataset name="TableDataset">
+		<field name="0" class="java.lang.String"/>
+		<field name="1" class="java.lang.String"/>
+		<field name="background" class="java.lang.Boolean"/>
+		<field name="header" class="java.lang.String"/>
+		<field name="footer" class="java.lang.String"/>
+	</subDataset>
+	<scriptlet name="Util" class="lu.labo.Util"/>
+	<scriptlet name="Scale" class="lu.labo.ImageController"/>
+	<scriptlet name="GlimsGraph" class="lu.labo.GlimsGraph"/>
+	<parameter name="report_chart_url" class="java.lang.String" evaluationTime="Early">
+		<defaultValueExpression><![CDATA["http://localhost:8080/chart"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="pdf" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<parameter name="map" class="java.util.Map" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new HashMap()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="referenceNumber" class="java.lang.String"/>
+  <field name="referenceNumberFormatted" class="java.lang.String"/>
+	<field name="patientFullName" class="java.lang.String"/>
+	<field name="patientShortName" class="java.lang.String"/>
+	<field name="patientInfo" class="java.lang.String"/>
+	<field name="physicianFullName" class="java.lang.String"/>
+	<field name="physicianInfo" class="java.lang.String"/>
+	<field name="examinationStatus" class="java.lang.String"/>
+	<field name="animalName" class="java.lang.String"/>
+	<field name="objectTemplateName" class="java.lang.String"/>
+	<field name="animalBirthdate" class="java.lang.String"/>
+	<field name="animalSex" class="java.lang.String"/>
+	<field name="animalExternalId" class="java.lang.String"/>
+	<field name="prescriptionDate" class="java.lang.String"/>
+	<field name="examinationDate" class="java.lang.String"/>
+	<field name="creationDate" class="java.lang.String"/>
+	<field name="completionDate" class="java.lang.String"/>
+	<field name="validationDate" class="java.lang.String"/>
+	<field name="prelevementDate" class="java.lang.String"/>
+	<field name="editDate" class="java.lang.String"/>
+	<field name="language" class="java.lang.String"/>
+	<field name="accreditation" class="java.lang.Boolean"/>
+	<field name="kopieempfaenger" class="java.lang.String"/>
+	<field name="andereGenetik" class="java.lang.String"/>
+	<field name="spouseLastname" class="java.lang.String"/>
+	<field name="validator" class="java.lang.String"/>
+	<field name="naccBak" class="java.lang.String"/>
+	<field name="naccChemie" class="java.lang.String"/>
+  <field name="isaComment" class="java.lang.String"/>
+  <field name="patrejectComment" class="java.lang.String"/>
+	<field name="qr" class="java.lang.String"/>
+	<field name="qrValidTime" class="java.lang.String"/>
+	<field name="antibioResultCount" class="java.lang.Integer"/>
+	<field name="antibioGroupCount" class="java.lang.Integer"/>
+	<field name="resultCount" class="java.lang.Integer"/>
+	<field name="results" class="java.util.List"/>
+  <field name="antibioResults" class="java.util.Map"/>
+	<field name="specimenDate" class="java.lang.String"/>
+	<field name="reeditDate" class="java.lang.String"/>
+	<variable name="darkBand" class="java.lang.Boolean">
+		<variableExpression><![CDATA[$V{REPORT_COUNT}.intValue() % 2 == 1]]></variableExpression>
+	</variable>
+
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+
+  <title>
+		<band height="220" splitType="Prevent">
+      <printWhenExpression><![CDATA[$P{pdf}]]></printWhenExpression>
+
+      <image>
+        <reportElement x="4" y="2" width="539" height="202"/>
+        <imageExpression><![CDATA["/images/report_header_2024_blue.png"]]></imageExpression>
+      </image>
+
+      <textField>
+        <reportElement style="pdfHeader" x="15" y="100" width="280" height="27"/>
+        <textElement>
+          <font size="10" isBold="true"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{patientFullName}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="pdfHeader" x="15" y="127" width="280" height="12">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{spouseLastname})]]></printWhenExpression>
+        </reportElement>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{spouseLastname}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="pdfHeader" x="15" y="140" width="280" height="56"/>
+        <textElement>
+          <font size="9"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="7"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{patientInfo}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="pdfHeader" x="325" y="100" width="205" height="27"/>
+        <textElement>
+          <font size="10" isBold="true"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{physicianFullName}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="pdfHeader" x="325" y="140" width="205" height="42"/>
+        <textElement>
+          <font size="9"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="7"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{physicianInfo}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="default" x="450" y="15" width="80" height="25" forecolor="#E94F2D"/>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font size="16" isBold="true"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"COPY":($F{language}.equalsIgnoreCase("de")?"KOPIE":"COPIE")]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="default" x="410" y="45" width="120" height="16" forecolor="#1961AC"/>
+        <textElement textAlignment="Right">
+          <font size="10" isBold="true"/>
+        </textElement>
+        <textFieldExpression><![CDATA["REF.: " + $F{referenceNumberFormatted}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="default" x="410" y="58" width="120" height="16" forecolor="#1961AC"/>
+        <textElement textAlignment="Right">
+          <font size="10"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{examinationStatus}]]></textFieldExpression>
+      </textField>
+
+		</band>
+	</title>
+
+
+	<pageHeader>
+
+		<band height="40" splitType="Prevent">
+
+      <image>
+        <reportElement x="0" y="0" width="115" height="25">
+          <printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+        </reportElement>
+        <imageExpression><![CDATA["/images/Logo_LR.svg"]]></imageExpression>
+      </image>
+
+      <rectangle radius="6">
+        <reportElement style="default" x="123" y="1" width="419" height="20">
+          <printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+        </reportElement>
+        <graphicElement>
+          <pen lineWidth="1.5" lineStyle="Solid" lineColor="#1961AC"/>
+        </graphicElement>
+      </rectangle>
+
+      <textField>
+        <reportElement style="default" x="130" y="0" width="268" height="22" forecolor="#1961AC">
+          <printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+        </reportElement>
+        <textElement verticalAlignment="Middle">
+          <font size="9"/>
+        </textElement>
+        <textFieldExpression><![CDATA["Pat.: " + $F{patientShortName}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement style="default" x="400" y="0" width="135" height="22" forecolor="#1961AC">
+          <printWhenExpression><![CDATA[$V{PAGE_NUMBER} > 1]]></printWhenExpression>
+        </reportElement>
+        <textElement textAlignment="Right" verticalAlignment="Middle">
+          <font size="9"/>
+        </textElement>
+        <textFieldExpression><![CDATA["Ref.: " + $F{referenceNumberFormatted} + ($F{specimenDate} != null && $F{specimenDate}.length() >= 10  ? " (" + $F{specimenDate}.substring(0, 10) + ")" : "")]]></textFieldExpression>
+      </textField>
+
+      <frame>
+        <reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="545" height="26">
+          <printWhenExpression><![CDATA[$V{PAGE_NUMBER} < 2 && StringUtils.isNotEmpty($F{language})]]></printWhenExpression>
+        </reportElement>
+				<textField>
+					<reportElement style="textItem" x="10" y="2" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"Prescribed on:":($F{language}.equalsIgnoreCase("de")?"Verschrieben am:":"Prescrit le:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="10" y="14" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"Withdrawal on:":($F{language}.equalsIgnoreCase("de")?"Entnahme am:":"Prélèvement du:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="207" y="2" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"Received on:":($F{language}.equalsIgnoreCase("de")?"Empfangen am:":"Reçu le:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="207" y="14" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"Validated on:":($F{language}.equalsIgnoreCase("de")?"Validiert am:":"Validé le:")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="400" y="2" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"Edited on:":($F{language}.equalsIgnoreCase("de")?"Editiert am:":"Édité le:")]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="textItem" x="99" y="2" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{prescriptionDate}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="textItem" x="99" y="14" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{prelevementDate}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="textItem" x="290" y="2" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{specimenDate}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="textItem" x="290" y="14" width="82" height="12"/>
+					<textFieldExpression><![CDATA[$F{validationDate}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="textItem" x="465" y="2" width="78" height="12"/>
+					<textFieldExpression><![CDATA[$F{editDate}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="textItem" x="465" y="15" width="78" height="12"/>
+					<textFieldExpression><![CDATA[$F{reeditDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="textItem" x="400" y="15" width="82" height="12"/>
+					<textFieldExpression><![CDATA[StringUtils.isNotBlank($F{reeditDate})?$F{language}.equalsIgnoreCase("en")?"Issued at:":($F{language}.equalsIgnoreCase("de")?"Ausgegeben am:":"Émis le:"):""]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageHeader>
+
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<printWhenExpression><![CDATA[$F{resultCount}>0]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="545" height="15" backcolor="#FFEEEE"/>
+				<textField>
+					<reportElement style="columnHeader" x="173" y="3" width="80" height="12"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"| RESULTS":($F{language}.equalsIgnoreCase("de")?"| RESULTATE":"| RÉSULTATS")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="261" y="3" width="80" height="12"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"| UNITS":($F{language}.equalsIgnoreCase("de")?"| EINHEITEN":"| UNITÉS")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="410" y="3" width="120" height="12"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"| PREVIOUS RESULTS":($F{language}.equalsIgnoreCase("de")?"| VORHERIGE ERGEBNISSE":"| RÉSULTATS PRÉCÉDENTS")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="320" y="3" width="120" height="12"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"| REFERENCE VALUES":($F{language}.equalsIgnoreCase("de")?"| REFERENZWERTE":"| VALEURS DE RÉFÉRENCE")]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="columnHeader" x="10" y="3" width="80" height="12"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{language}.equalsIgnoreCase("en")?"ANALYSIS":($F{language}.equalsIgnoreCase("de")?"ANALYSEN":"ANALYSES")]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</columnHeader>
+
+	<detail>
+		<band height="15" splitType="Prevent">
+			<printWhenExpression><![CDATA[$F{results} != null]]></printWhenExpression>
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="0" y="0" width="545" height="15" backcolor="#FFFFFF"/>
+				<subreport>
+					<reportElement style="default" mode="Opaque" x="0" y="0" width="545" height="15" forecolor="#1961AC"/>
+          <subreportParameter name="referenceNumber">
+            <subreportParameterExpression><![CDATA[$F{referenceNumber}]]></subreportParameterExpression>
+          </subreportParameter>
+					<subreportParameter name="language">
+						<subreportParameterExpression><![CDATA[$F{language}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="prelevementDate">
+						<subreportParameterExpression><![CDATA[$F{prelevementDate}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="paramMap">
+						<subreportParameterExpression><![CDATA[$P{map}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="resultCount">
+						<subreportParameterExpression><![CDATA[$F{resultCount}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="antibioGroupCount">
+						<subreportParameterExpression><![CDATA[$F{antibioGroupCount}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="antibioResultCount">
+						<subreportParameterExpression><![CDATA[$F{antibioResultCount}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="pdf">
+						<subreportParameterExpression><![CDATA[$P{pdf}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="report_chart_url">
+						<subreportParameterExpression><![CDATA[$P{report_chart_url}]]></subreportParameterExpression>
+					</subreportParameter>
+          <subreportParameter name="results">
+            <subreportParameterExpression><![CDATA[$F{results}]]></subreportParameterExpression>
+          </subreportParameter>
+          <subreportParameter name="antibioResults">
+            <subreportParameterExpression><![CDATA[$F{antibioResults}]]></subreportParameterExpression>
+          </subreportParameter>
+					<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanArrayDataSource($F{results}.toArray())]]></dataSourceExpression>
+					<subreportExpression><![CDATA["glims_results.jrxml"]]></subreportExpression>
+				</subreport>
+			</frame>
+		</band>
+	</detail>
+
+  <!--
+	<columnFooter>
+		<band height="1">
+			<printWhenExpression><![CDATA[!new Boolean(true).equals($P{REPORT_PARAMETERS_MAP}.get("LastPage")) && $F{results} != null]]></printWhenExpression>
+		</band>
+	</columnFooter>
+  -->
+
+	<pageFooter>
+		<band height="48" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{pdf} && $F{results} != null]]></printWhenExpression>
+      <textField>
+        <reportElement x="479" y="7" width="50" height="10" forecolor="#858585"/>
+        <textElement textAlignment="Right" verticalAlignment="Bottom">
+          <font size="6"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{language}.equals("en")?"Page":($F{language}.equals("de")?"Seite":"Page")]]></textFieldExpression>
+      </textField>
+      <textField>
+        <reportElement x="520" y="7" width="15" height="10" forecolor="#858585"/>
+        <textElement textAlignment="Right" verticalAlignment="Bottom">
+          <font size="6"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+      </textField>
+      <textField textAdjust="ScaleFont" evaluationTime="Report">
+        <reportElement x="530" y="7" width="15" height="10" forecolor="#858585"/>
+        <textElement textAlignment="Right" verticalAlignment="Bottom">
+          <font size="6"/>
+        </textElement>
+        <textFieldExpression><![CDATA[" / "+$V{PAGE_NUMBER}]]></textFieldExpression>
+      </textField>
+      <staticText>
+        <reportElement style="borderLine" x="0" y="18" width="150" height="30"/>
+        <textElement markup="styled">
+          <font size="8"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="5" />
+        </textElement>
+        <text><![CDATA[Laboratoires Réunis Luxembourg S.A.<br/>38, rue Hiehl<br/>L-6131 Junglinster]]></text>
+      </staticText>
+      <staticText>
+        <reportElement style="borderLine" x="150" y="18" width="90" height="30"/>
+        <textElement markup="styled">
+          <font size="8"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="5" />
+        </textElement>
+        <text><![CDATA[<br/>Tél. +352 780 290 1<br/>Fax +352 788 894]]></text>
+      </staticText>
+      <staticText>
+        <reportElement style="borderLine" x="260" y="18" width="100" height="30"/>
+        <textElement markup="styled">
+          <font size="8"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="5" />
+        </textElement>
+        <text><![CDATA[<br/>TVA: LU28010825<br/>RCS Luxembourg: B 200637]]></text>
+      </staticText>
+      <staticText>
+        <reportElement style="borderLine" x="370" y="18" width="80" height="30"/>
+        <textElement markup="styled">
+          <font size="8"/>
+          <paragraph lineSpacing="Fixed" lineSpacingSize="5" />
+        </textElement>
+        <text><![CDATA[<br/>contact@labo.lu<br/>www.labo.lu]]></text>
+      </staticText>
+      <image>
+        <reportElement x="460" y="18" width="90" height="30">
+          <printWhenExpression><![CDATA[$F{accreditation} != null && $F{accreditation}]]></printWhenExpression>
+        </reportElement>
+        <imageExpression><![CDATA["/images/iso15189.png"]]></imageExpression>
+      </image>
+		</band>
+	</pageFooter>
+
+	<summary>
+		<band height="110">
+			<printWhenExpression><![CDATA[new Boolean("dummyPrintWhen".equals($P{REPORT_PARAMETERS_MAP}.put("LastPage",true))) || true]]></printWhenExpression>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="nacFooter" positionType="Float" x="0" y="10" width="545" height="15"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{patrejectComment})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{patrejectComment}.trim()]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="nacFooter" positionType="Float" x="0" y="10" width="545" height="15"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{isaComment})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{isaComment}.trim()]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="nacFooter" positionType="Float" x="0" y="10" width="545" height="15"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{naccChemie})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{naccChemie}.trim()]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="nacFooter" positionType="Float" x="0" y="25" width="545" height="15"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{naccBak})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{naccBak}.trim()]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="textItem" positionType="Float" x="0" y="40" width="545" height="20"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{kopieempfaenger})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{kopieempfaenger}.trim()]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="textItem" positionType="Float" x="0" y="60" width="545" height="20"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{andereGenetik})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{andereGenetik}.trim()]]></textFieldExpression>
+      </textField>
+
+      <textField textAdjust="StretchHeight" isBlankWhenNull="true">
+        <reportElement style="textItem" positionType="Float" x="0" y="80" width="545" height="20"
+                       isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true">
+          <printWhenExpression><![CDATA[StringUtils.isNotBlank($F{validator})]]></printWhenExpression>
+        </reportElement>
+        <textFieldExpression><![CDATA[$F{validator}.trim()]]></textFieldExpression>
+      </textField>
+
+      <!-- TODO remove frame for Covid QR -->
+			<frame>
+				<reportElement stretchType="ContainerHeight" mode="Opaque" x="100" y="100" width="340" height="10" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[$P{pdf} && StringUtils.isNotBlank($F{qr})]]></printWhenExpression>
+				</reportElement>
+				<rectangle radius="15">
+					<reportElement x="0" y="0" width="340" height="205" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0E3F8E"/>
+				</rectangle>
+				<image onErrorType="Blank">
+					<reportElement x="101" y="60" width="140" height="140"/>
+					<imageExpression><![CDATA[new java.io.ByteArrayInputStream(org.apache.commons.codec.binary.Base64.decodeBase64($F{qr}.getBytes()))]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement x="5" y="10" width="335" height="27" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Center">
+						<font size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[EU DIGITAL COVID CERTIFICATE]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="5" y="37" width="335" height="15" forecolor="#FFFFFF">
+						<printWhenExpression><![CDATA[StringUtils.isNotBlank($F{qrValidTime})]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Valid: " + $F{qrValidTime}]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="260" y="90" width="60" height="60"/>
+					<imageExpression><![CDATA["/images/eu_lu.png"]]></imageExpression>
+				</image>
+			</frame>
+
+
+		</band>
+	</summary>
+</jasperReport>
