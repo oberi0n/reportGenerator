@@ -8,15 +8,13 @@ body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--b
 h1 { color: var(--blue); margin: 0 0 8px; }
 .hero p:last-child { margin-bottom: 0; color: #516070; }
 .search-card { margin-top: 18px; padding: 22px; }
-.search-card > label { display: block; font-weight: 700; margin-bottom: 8px; color: var(--blue); }
-.search-row { display: flex; gap: 12px; }
-input { border: 1px solid #b9c4d5; border-radius: 10px; padding: 13px 14px; font-size: 1rem; }
-.search-row input { flex: 1; }
-.date-row { display: flex; gap: 12px; margin-top: 14px; flex-wrap: wrap; }
-.date-row label { display: flex; flex-direction: column; gap: 6px; color: var(--blue); font-weight: 700; font-size: .9rem; }
-.date-row input { min-width: 180px; }
-button { border: 0; border-radius: 10px; padding: 0 22px; background: var(--blue); color: white; font-weight: 700; cursor: pointer; }
+.filters-row { display: grid; grid-template-columns: minmax(260px, 1fr) 170px 170px auto auto; gap: 12px; align-items: end; }
+.filters-row label { display: flex; flex-direction: column; gap: 6px; color: var(--blue); font-weight: 700; font-size: .9rem; }
+input { width: 100%; border: 1px solid #b9c4d5; border-radius: 10px; padding: 13px 14px; font-size: 1rem; }
+button { border: 0; border-radius: 10px; min-height: 47px; padding: 0 22px; background: var(--blue); color: white; font-weight: 700; cursor: pointer; }
 button:hover { background: #141f66; }
+.secondary-button { background: #eef2f8; color: var(--blue); border: 1px solid #b9c4d5; }
+.secondary-button:hover { background: #dfe6f2; }
 .hint { margin: 10px 0 0; color: #667386; font-size: .92rem; }
 .results-card { margin-top: 18px; overflow: hidden; }
 .results-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 22px; border-bottom: 1px solid var(--line); }
@@ -32,4 +30,5 @@ td { font-size: .94rem; }
 .pdf-link { color: var(--red); font-weight: 700; text-decoration: none; }
 .pdf-link:hover { text-decoration: underline; }
 .empty { text-align: center; color: #718093; padding: 28px; }
-@media (max-width: 720px) { .search-row, .date-row { flex-direction: column; } button { min-height: 44px; } .results-header { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 900px) { .filters-row { grid-template-columns: 1fr 1fr; } .query-filter { grid-column: 1 / -1; } }
+@media (max-width: 720px) { .filters-row { grid-template-columns: 1fr; } button { min-height: 44px; } .results-header { align-items: flex-start; flex-direction: column; } }

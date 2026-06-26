@@ -17,14 +17,12 @@
     </section>
 
     <form id="search-form" class="search-card">
-      <label for="query">Critère de recherche</label>
-      <div class="search-row">
-        <input id="query" name="q" type="search" autocomplete="off" placeholder="Ex. TESTER, médecin, 19950319TESC07...">
+      <div class="filters-row" aria-label="Filtres de recherche">
+        <label class="query-filter" for="query"><span>Recherche</span><input id="query" name="q" type="search" autocomplete="off" placeholder="Nom, médecin, ID, matricule..."></label>
+        <label><span>Date de</span><input id="date-from" name="dateFrom" type="date"></label>
+        <label><span>Date à</span><input id="date-to" name="dateTo" type="date"></label>
         <button type="submit">Rechercher</button>
-      </div>
-      <div class="date-row" aria-label="Filtre sur la date du rapport">
-        <label><span>Date du rapport de</span><input id="date-from" name="dateFrom" type="date"></label>
-        <label><span>à</span><input id="date-to" name="dateTo" type="date"></label>
+        <button id="reset-filters" type="button" class="secondary-button">Reset</button>
       </div>
       <p class="hint">La recherche utilise les fichiers <code>metadata.json</code> indexés en mémoire. Le filtre date s'applique à la date de validation du rapport.</p>
     </form>

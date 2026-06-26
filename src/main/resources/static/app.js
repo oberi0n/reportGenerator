@@ -4,6 +4,7 @@ const status = document.querySelector('#status');
 const dateFrom = document.querySelector('#date-from');
 const dateTo = document.querySelector('#date-to');
 const body = document.querySelector('#results-body');
+const resetButton = document.querySelector('#reset-filters');
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -24,6 +25,13 @@ form.addEventListener('submit', async (event) => {
     status.textContent = 'Erreur pendant la recherche.';
     body.innerHTML = `<tr><td class="empty" colspan="7">${escapeHtml(error.message)}</td></tr>`;
   }
+});
+
+resetButton.addEventListener('click', () => {
+  form.reset();
+  status.textContent = 'Saisissez un critère pour démarrer.';
+  body.innerHTML = '';
+  input.focus();
 });
 
 function render(results) {
