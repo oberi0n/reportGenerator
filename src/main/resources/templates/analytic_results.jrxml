@@ -38,17 +38,9 @@
     </pageHeader>
     <detail>
         <band height="448" splitType="Stretch">
-            <textField isStretchWithOverflow="true"><reportElement x="0" y="0" width="535" height="430"/><textElement markup="none"><font fontName="Monospaced" size="8"/></textElement><textFieldExpression><![CDATA[$P{resultsTable}]]></textFieldExpression></textField>
+            <textField textAdjust="StretchHeight"><reportElement x="0" y="0" width="535" height="430"/><textElement markup="none"><font fontName="Monospaced" size="8"/></textElement><textFieldExpression><![CDATA[$P{resultsTable}]]></textFieldExpression></textField>
         </band>
     </detail>
-    <summary>
-        <band height="116" splitType="Stretch">
-            <rectangle><reportElement x="0" y="0" width="535" height="38" backcolor="#FFF7E6"/><graphicElement><pen lineColor="#E0B35A"/></graphicElement></rectangle>
-            <textField><reportElement x="8" y="7" width="519" height="14"/><textElement><font size="9" isBold="true"/></textElement><textFieldExpression><![CDATA["Total résultats: " + $P{report}.resultCount() + "  |  Résultats hors référence: " + $P{report}.abnormalResultCount() + "  |  Sections: " + String.join(", ", $P{report}.sections())]]></textFieldExpression></textField>
-            <textField><reportElement x="8" y="22" width="519" height="12"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$P{report}.recordComments()]]></textFieldExpression></textField>
-            <textField isStretchWithOverflow="true"><reportElement x="0" y="48" width="535" height="50"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$P{footerText}]]></textFieldExpression></textField>
-        </band>
-    </summary>
     <pageFooter>
         <band height="20">
             <line><reportElement x="0" y="0" width="535" height="1" forecolor="#B7C3D0"/></line>
@@ -56,4 +48,12 @@
             <textField><reportElement x="435" y="5" width="100" height="12" forecolor="#666666"/><textElement textAlignment="Right"><font size="8"/></textElement><textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression></textField>
         </band>
     </pageFooter>
+    <summary>
+        <band height="116" splitType="Stretch">
+            <rectangle><reportElement x="0" y="0" width="535" height="38" backcolor="#FFF7E6"/><graphicElement><pen lineColor="#E0B35A"/></graphicElement></rectangle>
+            <textField><reportElement x="8" y="7" width="519" height="14"/><textElement><font size="9" isBold="true"/></textElement><textFieldExpression><![CDATA["Total résultats: " + $P{report}.resultCount() + "  |  Résultats hors référence: " + $P{report}.abnormalResultCount() + "  |  Sections: " + String.join(", ", $P{report}.sections())]]></textFieldExpression></textField>
+            <textField><reportElement x="8" y="22" width="519" height="12"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$P{report}.recordComments()]]></textFieldExpression></textField>
+            <textField textAdjust="StretchHeight"><reportElement x="0" y="48" width="535" height="50"/><textElement><font size="8"/></textElement><textFieldExpression><![CDATA[$P{footerText}]]></textFieldExpression></textField>
+        </band>
+    </summary>
 </jasperReport>
