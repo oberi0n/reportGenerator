@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,16 +51,19 @@ public class ReportSearchService {
                 .build();
     }
 
-    public List<ReportSearchResult> search(String query) {
+    public List<ReportSearchResult> search(String query, String dateFrom, String dateTo) {
         String normalizedQuery = normalize(query);
-        if (normalizedQuery.isBlank()) {
+        LocalDate from = parseDate(dateFrom);
+        LocalDate to = parseDate(dateTo);
+        if (normalizedQuery.isBlank() && from == null && to == null) {
             return List.of();
         }
 
         ensureIndexLoaded();
         return index.stream()
-                .filter(report -> report.searchableText().contains(normalizedQuery))
+                .filter(report -> normalizedQuery.isBlank() || report.searchableText().contains(normalizedQuery))
                 .map(IndexedReport::result)
+                .filter(result -> matchesDateRange(result.validationDate(), from, to))
                 .sorted(Comparator
                         .comparing(ReportSearchResult::validationDate, Comparator.nullsLast(String::compareTo)).reversed()
                         .thenComparing(ReportSearchResult::patientLastName, Comparator.nullsLast(String::compareToIgnoreCase))
@@ -161,6 +166,36 @@ public class ReportSearchService {
                 metadataPath,
                 pdfUrl
         );
+    }
+
+    private boolean matchesDateRange(String reportDate, LocalDate from, LocalDate to) {
+        LocalDate date = parseReportDate(reportDate);
+        if (date == null) {
+            return from == null && to == null;
+        }
+        boolean afterStart = from == null || !date.isBefore(from);
+        boolean beforeEnd = to == null || !date.isAfter(to);
+        return afterStart && beforeEnd;
+    }
+
+    private LocalDate parseReportDate(String value) {
+        String clean = value(value);
+        if (clean.length() >= 10) {
+            return parseDate(clean.substring(0, 10));
+        }
+        return null;
+    }
+
+    private LocalDate parseDate(String value) {
+        String clean = value(value);
+        if (clean.isBlank()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(clean.length() >= 10 ? clean.substring(0, 10) : clean);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     private String normalize(String value) {

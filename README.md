@@ -13,12 +13,12 @@ Déposez un XML, par exemple `ExportMedLogin2605066005.xml`, dans `./data/incomi
 
 ## Interface de recherche
 
-Une interface web très simple est exposée par l'application sur <http://localhost:8080>. Elle s’appuie sur un index en mémoire construit depuis les fichiers `metadata.json` archivés dans MinIO et permet de rechercher un rapport avec n’importe quelle métadonnée: nom/prénom patient, ID interne, matricule/SSN, médecin, statut, référence, validateur, etc. Les résultats affichent les informations patient principales et un lien temporaire vers le PDF archivé. En Docker Compose, ces liens utilisent `MINIO_PUBLIC_ENDPOINT=http://localhost:9000` pour être ouvrables depuis le navigateur.
+Une interface web très simple est exposée par l'application sur <http://localhost:8080>. Elle s’appuie sur un index en mémoire construit depuis les fichiers `metadata.json` archivés dans MinIO et permet de rechercher un rapport avec n’importe quelle métadonnée: nom/prénom patient, ID interne, matricule/SSN, médecin, statut, référence, validateur, etc. Les résultats affichent les informations patient principales et un lien temporaire vers le PDF archivé. Un filtre optionnel permet de limiter les résultats entre deux dates de validation. En Docker Compose, ces liens utilisent `MINIO_PUBLIC_ENDPOINT=http://localhost:9000` pour être ouvrables depuis le navigateur.
 
 API équivalente :
 
 ```bash
-curl "http://localhost:8080/api/reports/search?q=TESTER"
+curl "http://localhost:8080/api/reports/search?q=TESTER&dateFrom=2026-01-01&dateTo=2026-12-31"
 ```
 
 ## MinIO

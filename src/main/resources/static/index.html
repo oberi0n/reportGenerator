@@ -12,17 +12,21 @@
       <div>
         <p class="eyebrow">Laboratoires Réunis</p>
         <h1>Recherche de rapports patients</h1>
-        <p>Recherchez un compte-rendu archivé dans MinIO par nom, prénom, ID interne, matricule patient ou numéro de référence.</p>
+        <p>Recherchez un compte-rendu archivé dans MinIO par métadonnée, puis filtrez par date de validation du rapport.</p>
       </div>
     </section>
 
     <form id="search-form" class="search-card">
       <label for="query">Critère de recherche</label>
       <div class="search-row">
-        <input id="query" name="q" type="search" autocomplete="off" placeholder="Ex. TESTER, 19950319TESC07, 19950319XXXXX..." required>
+        <input id="query" name="q" type="search" autocomplete="off" placeholder="Ex. TESTER, médecin, 19950319TESC07...">
         <button type="submit">Rechercher</button>
       </div>
-      <p class="hint">La recherche utilise les fichiers <code>metadata.json</code> stockés avec chaque rapport.</p>
+      <div class="date-row" aria-label="Filtre sur la date du rapport">
+        <label><span>Date du rapport de</span><input id="date-from" name="dateFrom" type="date"></label>
+        <label><span>à</span><input id="date-to" name="dateTo" type="date"></label>
+      </div>
+      <p class="hint">La recherche utilise les fichiers <code>metadata.json</code> indexés en mémoire. Le filtre date s'applique à la date de validation du rapport.</p>
     </form>
 
     <section class="results-card">

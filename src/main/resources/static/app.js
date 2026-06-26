@@ -1,16 +1,22 @@
 const form = document.querySelector('#search-form');
 const input = document.querySelector('#query');
 const status = document.querySelector('#status');
+const dateFrom = document.querySelector('#date-from');
+const dateTo = document.querySelector('#date-to');
 const body = document.querySelector('#results-body');
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   const query = input.value.trim();
-  if (!query) return;
+  const params = new URLSearchParams();
+  if (query) params.set('q', query);
+  if (dateFrom.value) params.set('dateFrom', dateFrom.value);
+  if (dateTo.value) params.set('dateTo', dateTo.value);
+  if (![...params.keys()].length) return;
   status.textContent = 'Recherche en cours...';
   body.innerHTML = '';
   try {
-    const response = await fetch(`/api/reports/search?q=${encodeURIComponent(query)}`);
+    const response = await fetch(`/api/reports/search?${params.toString()}`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const results = await response.json();
     render(results);

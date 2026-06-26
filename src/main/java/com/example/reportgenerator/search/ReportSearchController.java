@@ -17,7 +17,10 @@ public class ReportSearchController {
     }
 
     @GetMapping("/search")
-    public List<ReportSearchResult> search(@RequestParam(name = "q", defaultValue = "") String query) {
-        return searchService.search(query);
+    public List<ReportSearchResult> search(
+            @RequestParam(name = "q", defaultValue = "") String query,
+            @RequestParam(name = "dateFrom", required = false) String dateFrom,
+            @RequestParam(name = "dateTo", required = false) String dateTo) {
+        return searchService.search(query, dateFrom, dateTo);
     }
 }
