@@ -23,6 +23,7 @@ services:
       APP_PROCESSED_DIR: /data/processed
       APP_ERROR_DIR: /data/error
       APP_POLL_INTERVAL_SECONDS: 10
+      APP_SEARCH_REFRESH_SECONDS: 60
       APP_TEMPLATE_DIR: /app/templates
       APP_TEMPLATE_MAIN: analytic.jrxml
       APP_IMAGE_DIR: /app/images
