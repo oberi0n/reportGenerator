@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recherche rapports laboratoire</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Laboratoires Réunis</p>
+        <h1>Recherche de rapports patients</h1>
+        <p>Recherchez un compte-rendu archivé dans MinIO par métadonnée, puis filtrez par date de validation du rapport.</p>
+      </div>
+    </section>
+
+    <form id="search-form" class="search-card">
+      <div class="filters-row" aria-label="Filtres de recherche">
+        <label class="query-filter" for="query"><span>Recherche</span><input id="query" name="q" type="search" autocomplete="off" placeholder="Nom, médecin, ID, matricule..."></label>
+        <label><span>Date de</span><input id="date-from" name="dateFrom" type="date"></label>
+        <label><span>Date à</span><input id="date-to" name="dateTo" type="date"></label>
+        <button type="submit">Rechercher</button>
+        <button id="reset-filters" type="button" class="secondary-button">Reset</button>
+      </div>
+      <p class="hint">La recherche utilise les fichiers <code>metadata.json</code> indexés en mémoire. Le filtre date s'applique à la date de validation du rapport.</p>
+    </form>
+
+    <section class="results-card">
+      <div class="results-header">
+        <h2>Résultats</h2>
+        <span id="status">Saisissez un critère pour démarrer.</span>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>ID interne</th>
+              <th>Matricule</th>
+              <th>Référence</th>
+              <th>Validation</th>
+              <th>Statut</th>
+              <th>PDF</th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

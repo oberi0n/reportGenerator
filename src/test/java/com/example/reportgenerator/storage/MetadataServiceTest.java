@@ -1,0 +1,3 @@
+package com.example.reportgenerator.storage;
+import com.example.reportgenerator.parser.LabReportXmlParser;import org.junit.jupiter.api.Test;import static org.assertj.core.api.Assertions.*;
+class MetadataServiceTest { @Test void buildsMetadataJson(){ var r=new LabReportXmlParser().parse(getClass().getResourceAsStream("/samples/ExportMedLogin2605066005.xml")); var svc=new MetadataService(); var m=svc.build(r,"sample.xml","xmlsha","pdfsha","2026-06-26T00:00:00Z","x.xml","x.pdf"); String json=new String(svc.json(m)); assertThat(json).contains("\"referenceNumber\" : \"2605066005\"").contains("\"abnormalResultCount\" : 1").contains("\"objectPdfPath\" : \"x.pdf\""); }}

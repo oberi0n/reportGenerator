@@ -1,0 +1,34 @@
+:root { color-scheme: light; --blue: #1d2a7a; --red: #d20f1f; --line: #d8deea; --bg: #f4f7fb; }
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: #152033; }
+.page { width: min(1180px, calc(100% - 32px)); margin: 28px auto; }
+.hero, .search-card, .results-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 10px 24px rgba(29, 42, 122, .08); }
+.hero { padding: 26px 30px; border-top: 5px solid var(--blue); }
+.eyebrow { color: var(--red); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+h1 { color: var(--blue); margin: 0 0 8px; }
+.hero p:last-child { margin-bottom: 0; color: #516070; }
+.search-card { margin-top: 18px; padding: 22px; }
+.filters-row { display: grid; grid-template-columns: minmax(260px, 1fr) 170px 170px auto auto; gap: 12px; align-items: end; }
+.filters-row label { display: flex; flex-direction: column; gap: 6px; color: var(--blue); font-weight: 700; font-size: .9rem; }
+input { width: 100%; border: 1px solid #b9c4d5; border-radius: 10px; padding: 13px 14px; font-size: 1rem; }
+button { border: 0; border-radius: 10px; min-height: 47px; padding: 0 22px; background: var(--blue); color: white; font-weight: 700; cursor: pointer; }
+button:hover { background: #141f66; }
+.secondary-button { background: #eef2f8; color: var(--blue); border: 1px solid #b9c4d5; }
+.secondary-button:hover { background: #dfe6f2; }
+.hint { margin: 10px 0 0; color: #667386; font-size: .92rem; }
+.results-card { margin-top: 18px; overflow: hidden; }
+.results-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 22px; border-bottom: 1px solid var(--line); }
+h2 { margin: 0; color: var(--blue); }
+#status { color: #667386; font-size: .95rem; }
+.table-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: white; }
+th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid #edf0f5; vertical-align: top; }
+th { background: #f8fafe; color: var(--blue); font-size: .88rem; text-transform: uppercase; letter-spacing: .03em; }
+td { font-size: .94rem; }
+.patient-name { font-weight: 700; }
+.muted { color: #718093; font-size: .85rem; }
+.pdf-link { color: var(--red); font-weight: 700; text-decoration: none; }
+.pdf-link:hover { text-decoration: underline; }
+.empty { text-align: center; color: #718093; padding: 28px; }
+@media (max-width: 900px) { .filters-row { grid-template-columns: 1fr 1fr; } .query-filter { grid-column: 1 / -1; } }
+@media (max-width: 720px) { .filters-row { grid-template-columns: 1fr; } button { min-height: 44px; } .results-header { align-items: flex-start; flex-direction: column; } }
